@@ -122,11 +122,7 @@
           <attribute name="label">
            <string>Unclassified</string>
           </attribute>
-          <layout class="QVBoxLayout" name="unClassifyBox">
-           <item>
-            <layout class="QGridLayout" name="gridLayout"/>
-           </item>
-          </layout>
+          <layout class="QVBoxLayout" name="unClassifyBox"/>
          </widget>
         </widget>
        </item>
