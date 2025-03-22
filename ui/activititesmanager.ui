@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <property name="geometry">
@@ -122,7 +122,11 @@
           <attribute name="label">
            <string>Unclassified</string>
           </attribute>
-          <layout class="QVBoxLayout" name="unClassifyBox"/>
+          <layout class="QVBoxLayout" name="unClassifyBox">
+           <item>
+            <layout class="QGridLayout" name="gridLayout"/>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>
