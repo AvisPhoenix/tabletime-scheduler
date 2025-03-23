@@ -68,8 +68,9 @@ set(PROJECT_SOURCES
         ui/configurationdlg.h ui/configurationdlg.cpp ui/configurationdlg.ui
         parser/configurationparser.h
         parser/configurationparser.cpp
-        ${TS_FILES}
 )
+
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES es)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   if (WIN32)
@@ -117,6 +118,13 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+qt_collect_translation_source_targets(i18n_targets)
+qt_add_lupdate(SOURCE_TARGETS ${i18n_targets})
+
+qt_add_translations(tabletime-scheduler
+    QM_FILES_OUTPUT_VARIABLE qm_files)
+ install(FILES ${qm_files} DESTINATION "translations")
+
 target_link_libraries(tabletime-scheduler PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(tabletime-scheduler PUBLIC yaml-cpp::yaml-cpp)
 
@@ -124,7 +132,7 @@ target_link_libraries(tabletime-scheduler PUBLIC yaml-cpp::yaml-cpp)
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.tabletime-scheduler)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER org.tabletime-scheduler)
 endif()
 set_target_properties(tabletime-scheduler PROPERTIES
     ${BUNDLE_ID_OPTION}
