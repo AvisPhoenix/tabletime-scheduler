@@ -1,9 +1,4 @@
 <RCC>
-    <qresource prefix="/fonts">
-        <file>icons/FontAwesome6Free-Solid-900.otf</file>
-        <file>icons/FontAwesome6Free-Regular-400.otf</file>
-        <file>icons/FontAwesome6Brands-Regular-400.otf</file>
-    </qresource>
     <qresource prefix="/icon">
         <file>icon/org.tabletime-scheduler.svg</file>
         <file>icon/org.tabletime-scheduler.iconset/icon_512x512@2x.png</file>
@@ -16,5 +11,19 @@
         <file>icon/org.tabletime-scheduler.iconset/icon_256x256.png</file>
         <file>icon/org.tabletime-scheduler.iconset/icon_256x256@2x.png</file>
         <file>icon/org.tabletime-scheduler.iconset/icon_512x512.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/download.svg</file>
+        <file>icons/eye-low-vision.svg</file>
+        <file>icons/file-import.svg</file>
+        <file>icons/file.svg</file>
+        <file>icons/floppy-disk.svg</file>
+        <file>icons/folder-open.svg</file>
+        <file>icons/gear.svg</file>
+        <file>icons/hard-drive.svg</file>
+        <file>icons/pen-to-square.svg</file>
+        <file>icons/pen.svg</file>
+        <file>icons/trash.svg</file>
+        <file>icons/user.svg</file>
     </qresource>
 </RCC>

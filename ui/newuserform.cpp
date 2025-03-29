@@ -18,7 +18,6 @@ NewUserForm::NewUserForm(const QList<Owner*> *owners, const int &size, QWidget *
 {
     ui->setupUi(this);
     ui->imagePreview->setFixedSize(size,size);
-    setFixedSize(400,200);
     setModal(true);
     createConnections();
     createTransparentImage();

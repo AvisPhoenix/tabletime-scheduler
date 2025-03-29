@@ -6,15 +6,17 @@
 #include <QStyle>
 #include <QDrag>
 #include <QMimeData>
+#include "../../ui/svgiconbuilder.h"
 
 QActivity::QActivity(QWidget *parent)
-    : QWidget{parent}, Activity(), removeBtn("\uf2ed", 16), theme(nullptr) {
+    : QWidget{parent}, Activity(), theme(nullptr) {
     defaultConstructor();
 }
 
 void QActivity::defineRemoveButton()
 {
-    removeBtn.setStyleSheet("QPushButton {color: red; font-family: 'FontAwesome';}");
+    removeBtn.setIcon(SVGIconBuilder::build(":/icons/icons/trash.svg",Qt::red,16));
+    removeBtn.setIconSize(QSize(16,16));
     removeBtn.setParent(this);
     removeBtn.setFlat(true);
     removeBtn.setGeometry(5,5,18,18);
@@ -29,7 +31,7 @@ void QActivity::defaultConstructor()
 }
 
 QActivity::QActivity(QString name, QString classification, QWidget *parent)
-    : QWidget(parent), Activity(name, classification), removeBtn("\uf2ed", 16) {
+    : QWidget(parent), Activity(name, classification) {
     defaultConstructor();
 }
 

@@ -22,7 +22,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 protected:
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
 private slots:
     void importFile();
     void saveSchedule();
@@ -57,7 +57,7 @@ private:
     const QString fileExtension = "yml";
     QString configurationFile = "/theme-conf.yml";
     const int iconSize;
-    bool firstResize;
+    QColor iconColor;
 
     void setActions();
     void setToolBar();
@@ -68,11 +68,10 @@ private:
     void clearData();
     void reloadUI();
     void setColorManager();
-    void setScheduleSizeManager();
+    void setScheduleSizeManager(QSize size);
     void GenerateGridItem();
     bool isDarkTheme();
     void addNewUser(Owner *owner);
-    void loadFontAwesome();
     void clearUI();
     void loadConfiguration();
 };

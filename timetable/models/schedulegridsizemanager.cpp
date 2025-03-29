@@ -15,6 +15,7 @@ ScheduleGridSizeManager::ScheduleGridSizeManager(QFont font,
                                                  int endHour):
     timeParts(timePartition), padding(paddingPx), textFont(font), snap2Time(true), sHour(startHour), eHour(endHour), elapsedHours(endHour-startHour){
     setSpaceSize(width, height);
+    qDebug() << width << ", " << height;
 }
 
 void ScheduleGridSizeManager::updateTextFont()
@@ -24,6 +25,7 @@ void ScheduleGridSizeManager::updateTextFont()
 
 float ScheduleGridSizeManager::getHeaderHeight() {
     QFontMetrics metric((QFont()));
+    qDebug() <<  2*padding + metric.height();
     return 2*padding + metric.height();
 }
 

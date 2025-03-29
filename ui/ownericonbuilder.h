@@ -6,14 +6,11 @@
 class OwnerIconBuilder
 {
 public:
-    OwnerIconBuilder(const Owner *, int size=32, QColor fontColor= Qt::white);
-    QIcon getIcon();
+    OwnerIconBuilder(){}
+    static QIcon getIcon(const Owner *, const int& size=32, const QColor& color= Qt::white);
 private:
-    QIcon buildImageIcon();
-    QIcon buildFontIcon();
-    const Owner *owner;
-    const int size;
-    const QColor fontColor;
+    static QIcon buildImageIcon(const Owner *, const int& size, const QColor& color);
+    static QIcon buildFontIcon(const Owner *, const int& size, const QColor& color);
 };
 
 #endif // OWNERICONBUILDER_H

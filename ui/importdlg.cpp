@@ -19,7 +19,7 @@ ImportDlg::ImportDlg(ActivityPoolManager *activityPool, SchedulePoolManager *sch
 
     ui->progressBar->setHidden(true);
     ui->errorsGrp->setHidden(true);
-    setFixedHeight(250);
+    setFixedHeight(300);
 
     connect(ui->mergeCbx, &QCheckBox::checkStateChanged, this, &ImportDlg::mergeMode);
     connect(ui->importBtn, &QPushButton::clicked, this, &ImportDlg::startImport);
@@ -98,7 +98,7 @@ void ImportDlg::showProcessMessages(QList<QString> processMessages) {
 
 void ImportDlg::prepareImport()
 {
-    setFixedHeight(430);
+    setFixedHeight(470);
     ui->progressBar->setHidden(false);
     ui->errorListTxt->setPlainText("");
     ui->errorsGrp->setHidden(false);

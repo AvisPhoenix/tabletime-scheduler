@@ -1,23 +1,21 @@
 #include "viewselectionbutton.h"
-#include "fontawesomeiconbuilder.h"
+#include "svgiconbuilder.h"
 #include <QWidgetAction>
 #include <QCheckBox>
 
 
-ViewSelectionButton::ViewSelectionButton(const QList<Owner *> *owners, const int &size): owners(owners), size(size) {
+ViewSelectionButton::ViewSelectionButton(const QList<Owner *> *owners, const QColor &color, const int &size):
+    owners(owners),
+    size(size),
+    defaultIconColor(color){
     setFixedSize(QSize(size+10,size));
-    getDefaultFontColor();
+    setIconSize(QSize(size,size));
     setToolTip(tr("View selection"));
     clearMenu();
     reloadMenus();
     setMenu(&menu);
     setPopupMode(QToolButton::MenuButtonPopup);
-    setIcon(FontAwesomeIconBuilder("\uf06e",size, defaultFontColor).build());
-}
-
-void ViewSelectionButton::getDefaultFontColor() {
-    QPalette palette = this->palette();
-    defaultFontColor = palette.color(QPalette::ButtonText);
+    setIcon(SVGIconBuilder::build(":/icons/icons/eye-low-vision.svg", defaultIconColor, size));
 }
 
 QWidgetAction* ViewSelectionButton::buildMenuItem(Owner *owner) {

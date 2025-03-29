@@ -46,11 +46,14 @@ void WeekTableTime::drawHorizontalMainLines(QPainter *painter, QRectF area)
 {
     painter->setBrush(Qt::transparent);
     painter->setPen(theme->getGridColor("line"));
-    QLineF baseLine(area.topLeft(), area.topRight());
+
     painter->drawLine(QLineF(QPointF(gridMng->getStartWeekZone(), area.top()), area.topRight()));
+
+    QLineF baseLine(area.topLeft(), area.topRight());
+    baseLine.translate(QPointF(0, gridMng->getHeaderHeight()));
     for(int i =0; i < 21; i++){
-        baseLine.translate(QPointF(0, gridMng->getHourGap()));
         painter->drawLine(baseLine);
+        baseLine.translate(QPointF(0, gridMng->getHourGap()));
     }
 }
 

@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QErrorMessage>
 #include <QGraphicsView>
+#include <QGuiApplication>
+#include <QScreen>
 #include <QDebug>
 #include "timetable/parser/timetablefile.h"
 #include "timetable/ui/qscheduleactivity.h"
@@ -14,17 +16,19 @@
 #include "ui/importdlg.h"
 #include "ui/newuserform.h"
 #include "models/colorGenerators/rainbowlcolorsgenerator.h"
+#include "ui/svgiconbuilder.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), iconSize(32), firstResize(false), scene(nullptr)
+    : QMainWindow(parent), iconSize(32), scene(nullptr)
 {
-    loadFontAwesome();
 
     setWindowIcon(QIcon(":/icon/icon/org.tabletime-scheduler.svg"));
     setWindowTitle(tr("Tabletime Scheduler"));
-    showMaximized();
-    setMinimumSize(640,480);
 
+    setMinimumSize(640,480);
+    showMaximized();
+
+    iconColor = isDarkTheme()? QColor(168,168,168) : QColor(40,40,40);
     setConfigFile();
     setColorManager();
     setActions();
@@ -41,19 +45,16 @@ MainWindow::~MainWindow() {
     delete scheduleSizeManager;
 }
 
-void MainWindow::loadFontAwesome() {
-    if (QFontDatabase::addApplicationFont(":/fonts/icons/FontAwesome6Free-Regular-400.otf") < 0)
-        qWarning() << "FontAwesome cannot be loaded !";
-    if (QFontDatabase::addApplicationFont(":/fonts/icons/FontAwesome6Free-Solid-900.otf") < 0)
-        qWarning() << "FontAwesome cannot be loaded !";
-}
-
 void MainWindow::resizeEvent(QResizeEvent *event) {
-    if (!firstResize && isMaximized() && scene != nullptr){
-        firstResize = true;
-        scene->setSceneRect(0, 0, centralWidget()->width()-16, centralWidget()->height()-2);
-        scheduleSizeManager->setSpaceSize(scene->width(), scene->height());
+    if (isMaximized() && (scene != nullptr)
+            && (centralWidget() != nullptr)){
+        if ((centralWidget()->width()-16) > scene->width()
+                || (centralWidget()->height()-2) > scene->height() ){
+            scene->setSceneRect(0, 0, centralWidget()->width()-16, centralWidget()->height()-2);
+            scheduleSizeManager->setSpaceSize(scene->width(), scene->height());
+        }
     }
+    QMainWindow::resizeEvent(event);
 }
 
 void MainWindow::importFile() {
@@ -183,39 +184,36 @@ void MainWindow::setupDialog() {
 }
 
 void MainWindow::setActions() {
-    newScheduleAction.setIconText("\uf15b");
+
+    newScheduleAction.setIcon(SVGIconBuilder::build(":/icons/icons/file.svg", iconColor, iconSize));
     newScheduleAction.setStatusTip(tr("New Schedule"));
     newScheduleAction.setToolTip(newScheduleAction.statusTip());
     connect(&newScheduleAction, SIGNAL(triggered()), this, SLOT(newSchedule()));
 
-    loadScheduleAction.setIconText("\uf07c");
+    loadScheduleAction.setIcon(SVGIconBuilder::build(":/icons/icons/folder-open.svg", iconColor, iconSize));
     loadScheduleAction.setStatusTip(tr("Load Schedule"));
     loadScheduleAction.setToolTip(loadScheduleAction.statusTip());
     connect(&loadScheduleAction, SIGNAL(triggered()), this, SLOT(loadSchedule()));
 
-    saveScheduleAction.setIconText("\uf0c7");
+    saveScheduleAction.setIcon(SVGIconBuilder::build(":/icons/icons/hard-drive.svg", iconColor, iconSize));
     saveScheduleAction.setStatusTip(tr("Save Schedule"));
     saveScheduleAction.setToolTip(saveScheduleAction.statusTip());
     connect(&saveScheduleAction, SIGNAL(triggered()), this, SLOT(saveSchedule()));
 
-    importAction.setIconText("\uf358");
+    importAction.setIcon(SVGIconBuilder::build(":/icons/icons/file-import.svg", iconColor, iconSize));
     importAction.setStatusTip(tr("Import file data"));
     importAction.setToolTip(importAction.statusTip());
     connect(&importAction, SIGNAL(triggered()), this, SLOT(importFile()));
 
-    configAction.setIconText("\uf5C0");
+    configAction.setIcon(SVGIconBuilder::build(":/icons/icons/gear.svg", iconColor, iconSize));
     configAction.setStatusTip(tr("Configuration"));
     configAction.setToolTip(configAction.statusTip());
     connect(&configAction, SIGNAL(triggered()), this, SLOT(setupDialog()));
 }
 
 void MainWindow::setToolBar(){
-    QFont font;
-    font.setFamily("FontAwesome");
-    font.setPixelSize(iconSize);
 
     QToolBar *menu = addToolBar(tr("Menu"));
-    menu->setFont(font);
     menu->addAction(&importAction);
     menu->addSeparator();
     menu->addAction(&newScheduleAction);
@@ -223,13 +221,13 @@ void MainWindow::setToolBar(){
     menu->addAction(&loadScheduleAction);
     menu->addAction(&saveScheduleAction);
 
-    userList = new OwnerSelectionButton(&ownerList,iconSize);
+    userList = new OwnerSelectionButton(&ownerList,iconColor, iconSize);
     menu->addWidget(userList);
     connect(userList, SIGNAL(addNewOwner()), this, SLOT(displayNewUserDialog()));
     connect(userList, SIGNAL(changeCurrentOwner(Owner*)), this, SLOT(changeCurrentUser(Owner*)));
     connect(userList, SIGNAL(editOwner(Owner*)), this, SLOT(editUserDialog(Owner*)));
 
-    viewSelectionBtn = new ViewSelectionButton(&ownerList, iconSize);
+    viewSelectionBtn = new ViewSelectionButton(&ownerList,iconColor, iconSize);
     menu->addWidget(viewSelectionBtn);
     connect(viewSelectionBtn, SIGNAL(changeSelectedOwners(QList<Owner*>*)), this, SLOT(changeViewSelection(QList<Owner*>*)));
 
@@ -260,8 +258,8 @@ bool MainWindow::isDarkTheme() {
     return palette.color(QPalette::Window).lightness() <= 128;
 }
 
-void MainWindow::setScheduleSizeManager() {
-    scheduleSizeManager = new ScheduleGridSizeManager(QFont(),centralWidget()->width(), centralWidget()->height());
+void MainWindow::setScheduleSizeManager(QSize size) {
+    scheduleSizeManager = new ScheduleGridSizeManager(QFont(),size.width(), size.height());
 }
 
 void MainWindow::setActivitiesDock() {
@@ -281,10 +279,20 @@ void MainWindow::setScheduleScene() {
     QGraphicsView* view = new QGraphicsView(this);
     setCentralWidget(view);
 
-    setScheduleSizeManager();
+    QSize firstSize;
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (screen) {
+        firstSize.setWidth(screen->size().width()-267);
+        firstSize.setHeight(screen->size().height()-184);
+    } else {
+        firstSize.setWidth(centralWidget()->width());
+        firstSize.setHeight(centralWidget()->height());
+    }
+
+    setScheduleSizeManager(firstSize);
     scene = new TableTimeScene(&schedulePool, scheduleSizeManager, theme, this);
     scene->changeCurrentOwner(userList->getCurrentOwner());
-    scene->setSceneRect(0, 0, centralWidget()->width(), centralWidget()->height());
+    scene->setSceneRect(0, 0, firstSize.width(), firstSize.height());
 
     view->setScene(scene);
 }

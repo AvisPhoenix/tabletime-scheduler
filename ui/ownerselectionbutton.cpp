@@ -3,22 +3,25 @@
 #include <QAction>
 #include <QPalette>
 
-#include "fontawesomeiconbuilder.h"
+#include "svgiconbuilder.h"
 #include "ownericonbuilder.h"
 #include "usereditselectionaction.h"
 
 void OwnerSelectionButton::addNewActionBuild()
 {
     addNewText = tr("Add new user");
-    addNew.setIcon(FontAwesomeIconBuilder("\u002b",size,defaultFontColor).build());
+    addNew.setIcon(SVGIconBuilder::build(":/icons/icons/user.svg",defaultIconColor, size));
     addNew.setText(addNewText);
 }
 
-OwnerSelectionButton::OwnerSelectionButton(const QList<Owner*> *owners, const int &size): owners(owners), anonymous("Anonymous"), size(size) {
+OwnerSelectionButton::OwnerSelectionButton(const QList<Owner*> *owners, const QColor &color, const int &size):
+    owners(owners),
+    anonymous("Anonymous"),
+    size(size),
+    defaultIconColor(color){
     anonymous.setColor(Qt::transparent);
     setFixedSize(QSize(size+10,size));
-    QPalette palette = this->palette();
-    defaultFontColor = palette.color(QPalette::ButtonText);
+    setIconSize(QSize(size,size));
     addNewActionBuild();
     clearMenu();
     reloadMenus();
@@ -30,13 +33,13 @@ OwnerSelectionButton::OwnerSelectionButton(const QList<Owner*> *owners, const in
 void OwnerSelectionButton::clearMenu(){
     menu.clear();
     menu.addAction(&addNew);
-    setIcon(OwnerIconBuilder(&anonymous, size, defaultFontColor).getIcon());
+    setIcon(OwnerIconBuilder::getIcon(&anonymous, size, defaultIconColor));
     setToolTip(anonymous.getName());
 }
 
 void OwnerSelectionButton::reloadMenus() {
     for(auto owner: std::as_const(*owners)){
-        UserEditSelectionAction *action = new UserEditSelectionAction(owner, size, defaultFontColor);
+        UserEditSelectionAction *action = new UserEditSelectionAction(owner, size, defaultIconColor);
         connect(action, &UserEditSelectionAction::editOwner, this, &OwnerSelectionButton::onEditOwner);
         menu.addAction(action);
     }
@@ -51,7 +54,7 @@ void OwnerSelectionButton::autoSelectUser() {
 
 void OwnerSelectionButton::addLastOwner() {
     if (owners->size() > 0){
-        UserEditSelectionAction *action = new UserEditSelectionAction(owners->last(), size, defaultFontColor);
+        UserEditSelectionAction *action = new UserEditSelectionAction(owners->last(), size, defaultIconColor);
         connect(action, &UserEditSelectionAction::editOwner, this, &OwnerSelectionButton::onEditOwner);
         menu.addAction(action);
         autoSelectUser();

@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QWidget>
 #include <QMouseEvent>
+#include <QPushButton>
 #include "../models/activity.h"
-#include "../../ui/qawesometoolbutton.h"
 #include "../../models/themecolors.h"
 
 class QActivity : public QWidget, public Activity
@@ -26,7 +26,7 @@ protected slots:
 signals:
     void onDelete(QActivity *act);
 private:
-    QAwesomeToolButton removeBtn;
+    QPushButton removeBtn;
     int aFill;
     QColor color;
     ThemeColors *theme;

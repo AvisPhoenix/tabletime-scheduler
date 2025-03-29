@@ -12,7 +12,7 @@ class ViewSelectionButton : public QToolButton
 {
     Q_OBJECT
 public:
-    ViewSelectionButton(const QList<Owner*> *owners, const int &size);
+    ViewSelectionButton(const QList<Owner*> *owners, const QColor &color, const int &size);
     void clearMenu();
     void reloadMenus();
     void addLastOwner();
@@ -28,8 +28,7 @@ private:
     QList<Owner *> selected;
     QMenu menu;
     const int size;
-    QColor defaultFontColor;
-    void getDefaultFontColor();
+    QColor defaultIconColor;
     void buildMenu();
     QWidgetAction* buildMenuItem(Owner *owner);
 };

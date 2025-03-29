@@ -11,7 +11,7 @@ class OwnerSelectionButton : public QToolButton
 {
     Q_OBJECT
 public:
-    OwnerSelectionButton(const QList<Owner*> *owners, const int &size);
+    OwnerSelectionButton(const QList<Owner*> *owners, const QColor &color, const int &size);
     void clearMenu();
     void reloadMenus();
     void addLastOwner();
@@ -32,7 +32,7 @@ private:
     Owner anonymous;
     QString addNewText;
     const int size;
-    QColor defaultFontColor;
+    QColor defaultIconColor;
     void autoSelectUser();
 };
 

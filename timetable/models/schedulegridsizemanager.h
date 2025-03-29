@@ -29,6 +29,7 @@ public:
     int getDayByPosition(float posX);
     QRectF getActivitySizeByTimeRange(QTime start, QTime end, int dayWeek);
     float getPositionByTime(QTime start);
+    float getHeaderHeight();
 
 private:
     bool snap2Time;
@@ -39,7 +40,6 @@ private:
     int sHour, eHour, elapsedHours;
 
     void updateTextFont();
-    float getHeaderHeight();
     float getHourWidth();
     void snap2ColumnDay(int i, float dayWidth, QRectF &output, float base);
     void foundHorizontalPosition(QRectF &output);

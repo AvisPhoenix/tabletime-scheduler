@@ -2,7 +2,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QIcon>
-#include "fontawesomeiconbuilder.h"
+#include "svgiconbuilder.h"
 #include "ownericonbuilder.h"
 
 
@@ -13,7 +13,7 @@ UserEditSelectionAction::UserEditSelectionAction(Owner *owner,
     owner(owner), QWidgetAction(parent){
     QWidget *widget = new QWidget();
     QHBoxLayout *layout = new QHBoxLayout();
-    layout->setContentsMargins(5,5,5,5);
+    layout->setContentsMargins(0,0,0,0);
     widget->setLayout(layout);
 
     addUserBtn(owner, size, fontColor, layout);
@@ -25,11 +25,11 @@ UserEditSelectionAction::UserEditSelectionAction(Owner *owner,
 
 void UserEditSelectionAction::addUserBtn(Owner *owner, int size, QColor fontColor, QHBoxLayout *layout)
 {
-    QIcon myIcon = OwnerIconBuilder(owner,size,fontColor).getIcon();
+    QIcon myIcon = OwnerIconBuilder::getIcon(owner,size,fontColor);
     QPushButton *userBtn = new QPushButton(myIcon,
                                            owner->getName());
     userBtn->setFlat(true);
-    userBtn->setFixedHeight(size/2);
+    userBtn->setFixedHeight(size);
     userBtn->setIconSize(QSize(size/2,size/2));
     userBtn->setStyleSheet("QPushButton { text-align: left; } QPushButton::menu-indicator { subcontrol-position: left center; }");
     connect(userBtn,&QPushButton::clicked,this,[this](){ emit triggered(); });
@@ -41,7 +41,7 @@ void UserEditSelectionAction::addUserBtn(Owner *owner, int size, QColor fontColo
 
 void UserEditSelectionAction::addEditButton(int size, QColor fontColor, QHBoxLayout *layout)
 {
-    QPushButton *editBtn = new QPushButton(FontAwesomeIconBuilder("\uf044",size,fontColor).build(),
+    QPushButton *editBtn = new QPushButton(SVGIconBuilder::build(":/icons/icons/pen-to-square.svg",fontColor, size),
                                            "");
     editBtn->setFlat(true);
     editBtn->setFixedSize(size/2,size/2);
